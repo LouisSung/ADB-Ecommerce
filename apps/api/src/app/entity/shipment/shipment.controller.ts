@@ -1,5 +1,6 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Query } from '@nestjs/common';
 
+import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../../constant';
 import { ShipmentEntity } from './shipment.entity';
 import { ShipmentService } from './shipment.service';
 
@@ -7,6 +8,15 @@ import { ShipmentService } from './shipment.service';
 @Controller('shipment')
 export class ShipmentController {
   constructor(private readonly shipmentService: ShipmentService) {
+  }
+
+  @Get('')
+  async paginateShipments(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(DEFAULT_PAGE_SIZE), ParseIntPipe) limit = DEFAULT_PAGE_SIZE
+  ) {
+    limit = Math.max(1, Math.min(limit, MAX_PAGE_SIZE));
+    return await this.shipmentService.paginateShipments({ page, limit });
   }
 
   @Get(':rm_id')

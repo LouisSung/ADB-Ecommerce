@@ -1,5 +1,6 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import { Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Query } from '@nestjs/common';
 
+import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../../constant';
 import { StorageEntity } from './storage.entity';
 import { StorageService } from './storage.service';
 
@@ -7,6 +8,15 @@ import { StorageService } from './storage.service';
 @Controller('storage')
 export class StorageController {
   constructor(private readonly storageService: StorageService) {
+  }
+
+  @Get('')
+  async paginateStorages(
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
+    @Query('limit', new DefaultValuePipe(DEFAULT_PAGE_SIZE), ParseIntPipe) limit = DEFAULT_PAGE_SIZE
+  ) {
+    limit = Math.max(1, Math.min(limit, MAX_PAGE_SIZE));
+    return await this.storageService.paginateStorages({ page, limit });
   }
 
   @Get(':sl_id')
