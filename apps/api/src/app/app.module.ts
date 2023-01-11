@@ -8,6 +8,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { entities } from './typeorm';
 
+import { CancelModule } from './entity/cancel/cancel.module';
+import { OrderModule } from './entity/order/order.module';
+import { ProductModule } from './entity/product/product.module';
+import { ReturnModule } from './entity/return/return.module';
+import { ShipmentModule } from './entity/shipment/shipment.module';
+import { StorageModule } from './entity/storage/storage.module';
+import { SupplierModule } from './entity/supplier/supplier.module';
+
+
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -26,6 +35,13 @@ import { entities } from './typeorm';
       }),
       inject: [ConfigService],
     }),
+    CancelModule,
+    OrderModule,
+    ProductModule,
+    ReturnModule,
+    ShipmentModule,
+    StorageModule,
+    SupplierModule,
   ],
   controllers: [AppController],
   providers: [AppService],
