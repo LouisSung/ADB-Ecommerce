@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "license": "MIT",
   "scripts": {
+    "build:image": "npm run build:prod && docker build -f tools/docker/Dockerfile -t ecommerce .",
     "build:prod": "nx build api --prod && nx build ecommerce --prod",
     "ng": "nx",
     "postinstall": "node ./decorate-angular-cli.js",
     "serve:api": "nx serve api",
-    "serve:app": "nx serve ecommerce"
+    "serve:app": "nx serve ecommerce",
+    "serve:database": "docker run -d --name postgis --shm-size=4g -e POSTGRES_PASSWORD=\"$DB_PASSWORD\" -v postgis:/var/lib/postgresql/data --net=network-ecommerce -p 5432:5432 postgis/postgis",
+    "serve:image": "docker run --rm -it --name ecommerce -e DB_HOST=postgis -e DB_PASSWORD=\"$DB_PASSWORD\" --net=network-ecommerce -p 80:3333 ecommerce"
   },
   "private": true,
   "dependencies": {

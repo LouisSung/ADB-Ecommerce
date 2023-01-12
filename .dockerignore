@@ -1,0 +1,5 @@
+*
+!package.json
+!package-lock.json
+!decorate-angular-cli.js
+!dist
