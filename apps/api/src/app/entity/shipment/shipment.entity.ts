@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { ShipmentDto } from '#libs/dto/entity';
+
+import { OrderEntity } from '../order/order.entity';
 
 
 @Entity({ name: 'shipment', synchronize: false })
@@ -30,4 +32,8 @@ export class ShipmentEntity implements ShipmentDto {
 
   @Column({ type: 'character varying', nullable: false })
   source_file: string; // CHARACTER VARYING(17) NOT NULL
+
+  // relationships
+  @OneToMany(() => OrderEntity, order => order.shipment)
+  orders?: Array<OrderEntity> | undefined;
 }

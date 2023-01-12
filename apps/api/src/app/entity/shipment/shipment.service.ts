@@ -19,4 +19,8 @@ export class ShipmentService {
   async findShipmentByRmId(rm_id: ShipmentEntity['rm_id']): Promise<ShipmentEntity> {
     return this.shipmentRepository.findOneBy({ rm_id });
   }
+
+  async getOrdersByRmId(rm_id: ShipmentEntity['rm_id']): Promise<ShipmentEntity> {
+    return this.shipmentRepository.findOne({ relations: ['orders'], where: { rm_id } });
+  }
 }

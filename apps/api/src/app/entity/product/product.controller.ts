@@ -27,4 +27,22 @@ export class ProductController {
     }
     return product;
   }
+
+  @Get(':product_id/orders')
+  async getOrdersByProductId(@Param('product_id', ParseIntPipe) product_id: ProductEntity['product_id']) {
+    const productWithOrders = await this.productService.getOrdersByProductId(product_id);
+    if (!productWithOrders) {
+      throw new NotFoundException(`orders (product.product_id = ${ product_id }) not found`);
+    }
+    return productWithOrders;
+  }
+
+  @Get(':product_id/storages')
+  async getStoragesByProductId(@Param('product_id', ParseIntPipe) product_id: ProductEntity['product_id']) {
+    const productWithStorages = await this.productService.getStoragesByProductId(product_id);
+    if (!productWithStorages) {
+      throw new NotFoundException(`storages (product.product_id = ${ product_id }) not found`);
+    }
+    return productWithStorages;
+  }
 }

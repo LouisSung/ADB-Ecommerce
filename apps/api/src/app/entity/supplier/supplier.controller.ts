@@ -27,4 +27,13 @@ export class SupplierController {
     }
     return supplier;
   }
+
+  @Get(':supplier_id/products')
+  async getProductsBySupplierId(@Param('supplier_id', ParseIntPipe) supplier_id: SupplierEntity['supplier_id']) {
+    const supplierWithProducts = await this.supplierService.getProductsBySupplierId(supplier_id);
+    if (!supplierWithProducts) {
+      throw new NotFoundException(`products (supplier.supplier_id = ${ supplier_id }) not found`);
+    }
+    return supplierWithProducts;
+  }
 }

@@ -19,4 +19,8 @@ export class SupplierService {
   async findSupplierBySupplierId(supplier_id: SupplierEntity['supplier_id']): Promise<SupplierEntity> {
     return this.supplierRepository.findOneBy({ supplier_id });
   }
+
+  async getProductsBySupplierId(supplier_id: SupplierEntity['supplier_id']): Promise<SupplierEntity> {
+    return this.supplierRepository.findOne({ relations: ['products'], where: { supplier_id } });
+  }
 }

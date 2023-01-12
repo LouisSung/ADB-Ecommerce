@@ -27,4 +27,13 @@ export class ReturnController {
     }
     return return_;
   }
+
+  @Get(':return_id/orders') // FIXME
+  async getOrdersByReturnId(@Param('return_id') return_id: ReturnEntity['return_id']) {
+    const returnWithOrders = await this.returnService.getOrdersByReturnId(return_id);
+    if (!returnWithOrders) {
+      throw new NotFoundException(`orders (return.return_id = ${ return_id }) not found`);
+    }
+    return returnWithOrders;
+  }
 }

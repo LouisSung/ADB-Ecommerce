@@ -1,5 +1,10 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { OrderDto } from '#libs/dto/entity';
+
+import { ProductEntity } from '../product/product.entity';
+import { ReturnEntity } from '../return/return.entity';
+import { CancelEntity } from '../cancel/cancel.entity';
+import { ShipmentEntity } from '../shipment/shipment.entity';
 
 
 @Entity({ name: 'order', synchronize: false })
@@ -66,4 +71,21 @@ export class OrderEntity implements OrderDto {
 
   @Column({ type: 'character varying', nullable: false })
   source_file: string; // CHARACTER VARYING(17) NOT NULL
+
+  // relationships
+  @ManyToOne(() => CancelEntity, cancel => cancel.orders)
+  @JoinColumn({ name: 'rg_id', referencedColumnName: 'rg_id' })
+  cancel?: CancelEntity | undefined;
+
+  @ManyToOne(() => ProductEntity, product => product.orders)
+  @JoinColumn({ name: 'product_id', referencedColumnName: 'product_id' })
+  product?: ProductEntity;
+
+  @ManyToOne(() => ReturnEntity, return_ => return_.orders)
+  @JoinColumn({ name: 'rs_id', referencedColumnName: 'rs_id' })
+  'return'?: ReturnEntity | undefined;
+
+  @ManyToOne(() => ShipmentEntity, shipment => shipment.orders)
+  @JoinColumn({ name: 'rm_id', referencedColumnName: 'rm_id' })
+  shipment?: ShipmentEntity;
 }

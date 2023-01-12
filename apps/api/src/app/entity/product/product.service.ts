@@ -19,4 +19,12 @@ export class ProductService {
   async findProductByProductId(product_id: ProductEntity['product_id']): Promise<ProductEntity> {
     return this.productRepository.findOneBy({ product_id });
   }
+
+  async getOrdersByProductId(product_id: ProductEntity['product_id']): Promise<ProductEntity> {
+    return this.productRepository.findOne({ relations: ['orders'], where: { product_id } });
+  }
+
+  async getStoragesByProductId(product_id: ProductEntity['product_id']): Promise<ProductEntity> {
+    return this.productRepository.findOne({ relations: ['storages'], where: { product_id } });
+  }
 }

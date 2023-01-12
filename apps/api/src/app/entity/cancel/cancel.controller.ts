@@ -27,4 +27,13 @@ export class CancelController {
     }
     return cancel;
   }
+
+  @Get(':rg_id/orders')
+  async getOrdersByRgId(@Param('rg_id', ParseIntPipe) rg_id: CancelEntity['rg_id']) {
+    const cancelWithOrders = await this.cancelService.getOrdersByRgId(rg_id);
+    if (!cancelWithOrders) {
+      throw new NotFoundException(`orders (cancel.rg_id = ${ rg_id }) not found`);
+    }
+    return cancelWithOrders;
+  }
 }

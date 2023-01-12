@@ -19,4 +19,8 @@ export class CancelService {
   async findCancelByRgId(rg_id: CancelEntity['rg_id']): Promise<CancelEntity> {
     return this.cancelRepository.findOneBy({ rg_id });
   }
+
+  async getOrdersByRgId(rg_id: CancelEntity['rg_id']): Promise<CancelEntity> {
+    return this.cancelRepository.findOne({ relations: ['orders'], where: { rg_id } });
+  }
 }

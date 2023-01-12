@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { CancelDto } from '#libs/dto/entity';
+
+import { OrderEntity } from '../order/order.entity';
 
 
 @Entity({ name: 'cancel', synchronize: false })
@@ -15,4 +17,8 @@ export class CancelEntity implements CancelDto {
 
   @Column({ type: 'character varying', nullable: false })
   cancel_reason: string; // CHARACTER VARYING(15) NOT NULL
+
+  // relationships
+  @OneToMany(() => OrderEntity, order => order.cancel)
+  orders?: Array<OrderEntity> | undefined;
 }

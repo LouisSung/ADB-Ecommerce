@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { StorageDto } from '#libs/dto/entity';
+
+import { ProductEntity } from '../product/product.entity';
 
 
 @Entity({ name: 'storage', synchronize: false })
@@ -27,4 +29,9 @@ export class StorageEntity implements StorageDto {
 
   @Column({ type: 'character varying', nullable: false })
   warehouse: Date; // CHARACTER VARYING(5) NOT NULL
+
+  // relationships
+  @ManyToOne(() => ProductEntity, product => product.storages)
+  @JoinColumn({ name: 'product_id', referencedColumnName: 'product_id' })
+  product?: ProductEntity;
 }

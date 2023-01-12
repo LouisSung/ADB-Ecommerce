@@ -27,4 +27,13 @@ export class ShipmentController {
     }
     return shipment;
   }
+
+  @Get(':rm_id/orders')
+  async getOrdersByRmId(@Param('rm_id') rm_id: ShipmentEntity['rm_id']) {
+    const shipmentWithOrders = await this.shipmentService.getOrdersByRmId(rm_id);
+    if (!shipmentWithOrders) {
+      throw new NotFoundException(`orders (shipment.rm_id = ${ rm_id }) not found`);
+    }
+    return shipmentWithOrders;
+  }
 }

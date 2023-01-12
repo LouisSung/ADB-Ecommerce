@@ -1,5 +1,7 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { ReturnDto } from '#libs/dto/entity';
+
+import { OrderEntity } from '../order/order.entity';
 
 
 @Entity({ name: 'return', synchronize: false })
@@ -24,4 +26,8 @@ export class ReturnEntity implements ReturnDto {
 
   @Column({ type: 'character varying', nullable: false })
   return_reason: string; // CHARACTER VARYING(15) NOT NULL
+
+  // relationships
+  @OneToMany(() => OrderEntity, order => order.return)
+  orders?: Array<OrderEntity> | undefined;
 }

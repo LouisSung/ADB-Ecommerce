@@ -1,5 +1,9 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { ProductDto } from '#libs/dto/entity';
+
+import { OrderEntity } from '../order/order.entity';
+import { SupplierEntity } from '../supplier/supplier.entity';
+import { StorageEntity } from '../storage/storage.entity';
 
 
 @Entity({ name: 'product', synchronize: false })
@@ -45,4 +49,15 @@ export class ProductEntity implements ProductDto {
 
   @Column({ type: 'character varying', nullable: false })
   source_file: string; // CHARACTER VARYING(12) NOT NULL
+
+  // relationships
+  @OneToMany(() => OrderEntity, order => order.product)
+  orders?: Array<OrderEntity> | undefined;
+
+  @ManyToOne(() => SupplierEntity, supplier => supplier.products)
+  @JoinColumn({ name: 'supplier_id', referencedColumnName: 'supplier_id' })
+  supplier?: SupplierEntity;
+
+  @OneToMany(() => StorageEntity, storage => storage.product)
+  storages?: Array<StorageEntity> | undefined;
 }

@@ -19,4 +19,8 @@ export class ReturnService {
   async findReturnByReturnId(return_id: ReturnEntity['return_id']): Promise<ReturnEntity> {
     return this.returnRepository.findOneBy({ return_id });
   }
+
+  async getOrdersByReturnId(return_id: ReturnEntity['return_id']): Promise<ReturnEntity> {
+    return this.returnRepository.findOne({ relations: ['orders'], where: { return_id } });
+  }
 }
