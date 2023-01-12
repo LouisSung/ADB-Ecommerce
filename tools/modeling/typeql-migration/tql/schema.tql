@@ -1,0 +1,250 @@
+define
+
+
+# === Order ===
+customer_id sub attribute, value string;
+rg_id sub attribute, value long;
+product_length sub attribute, value double;
+product_width sub attribute, value double;
+product_height sub attribute, value double;
+product_weight sub attribute, value double;
+package_id sub attribute, value string;
+rm_id sub attribute, value string;
+rs_id sub attribute, value string;
+shipping_name sub attribute, value string;
+order_time sub attribute, value datetime;
+product_id sub attribute, value long;
+guaranteed_shipping_time sub attribute, value datetime;
+actual_shipping_time sub attribute, value datetime;
+arrival_zip_code sub attribute, value long;
+arrival_address sub attribute, value string;
+shipping_company sub attribute, value string;
+warehouse sub attribute, value string;
+shipping_method sub attribute, value string;
+redelivery_count sub attribute, value long;
+source_file sub attribute, value string;
+
+order sub entity,
+    owns customer_id,
+    owns rg_id,
+    owns product_length,
+    owns product_width,
+    owns product_height,
+    owns product_weight,
+    owns package_id,
+    owns rm_id,
+    owns rs_id @key,
+    owns shipping_name,
+    owns order_time,
+    owns product_id,
+    owns guaranteed_shipping_time,
+    owns actual_shipping_time,
+    owns arrival_zip_code,
+    owns arrival_address,
+    owns shipping_company,
+    owns warehouse,
+    owns shipping_method,
+    owns redelivery_count,
+    owns source_file;
+
+
+# === Return ===
+# 	&&#@	01. RG單號: `rg_id`	long(8)
+# 	&&#@	02. RM單號: `rm_id`	string
+# 	^^#@	03. RS單號: `rs_id`	string
+return_id sub attribute, value string;
+return_establish_time sub attribute, value datetime;
+return_complete_time sub attribute, value datetime;
+return_reason sub attribute, value string;
+
+return sub entity,
+    owns rg_id,
+    owns rm_id,
+    owns rs_id,
+    owns return_id @key,
+    owns return_establish_time,
+    owns return_complete_time,
+    owns return_reason;
+
+
+# === Cancel ===
+# - cancel_order.csv --- (`rg_id` is deduplicated)
+# 	!!#@	01. RG單號: `rg_id`	long(8)
+cancel_time sub attribute, value datetime;
+proc_status sub attribute, value long;
+cancel_reason sub attribute, value string;
+
+cancel sub entity,
+    owns rg_id @key,
+    owns cancel_time,
+    owns proc_status,
+    owns cancel_reason;
+
+
+# = Shipment ===
+# 	&&#@	01. RG單號: `rg_id`	long(8)
+# 	!!#@	02. RM單號: `rm_id`	string
+shipping_id sub attribute, value string;
+# 	>>#@	04. 退貨完成日期: `return_complete_time`	datetime(16)
+failure_code sub attribute, value string;
+failure_reason sub attribute, value string;
+convenience_store sub attribute, value string;
+# 	**#@	08. 原始檔: `source_file`	string
+
+shipment sub entity,
+    owns rg_id,
+    owns rm_id @key,
+    owns shipping_id,
+    owns return_complete_time,
+    owns failure_code,
+    owns return_reason,
+    owns failure_reason,
+    owns convenience_store,
+    owns source_file;
+
+
+# = Supplier ===
+supplier_id sub attribute, value long;
+supplier_name sub attribute, value string;
+shipping_zip_code sub attribute, value long;
+shipping_address sub attribute, value string;
+supplier_zip_code sub attribute, value long;
+supplier_address sub attribute, value string;
+
+supplier sub entity,
+    owns supplier_id @key,
+    owns supplier_name,
+    owns shipping_zip_code,
+    owns shipping_address,
+    owns supplier_zip_code,
+    owns supplier_address;
+
+
+# = Product ===
+# 	**#@	01. 供應商代號: `supplier_id`	long(5)
+# 	!!#@	02. 商品編號: `product_id`	long(7)
+primary_category sub attribute, value long;
+secondary_category sub attribute, value long;
+supplier_model sub attribute, value string;
+product_name sub attribute, value string;
+barcode sub attribute, value string;
+# 	::#@	08. 商品材積(長)cm: `product_length`	double(3)
+# 	::#@	09. 商品材積(寬)cm: `product_width`	double(3)
+# 	::#@	10. 商品材積(高)cm: `product_height`	double(3)
+# 	::#@	11. 商品材積(重量)g: `product_weight`	long(6)
+# 	**#@	12. 倉別: `warehouse`	string
+product_keyin_time sub attribute, value datetime;
+# 	**#@	14. 原始檔: `source_file`	string
+
+product sub entity,
+    owns supplier_id,
+    owns product_id @key,
+    owns primary_category,
+    owns secondary_category,
+    owns supplier_model,
+    owns product_name,
+    owns barcode,
+    owns product_length,
+    owns product_width,
+    owns product_height,
+    owns product_weight,
+    owns warehouse,
+    owns product_keyin_time,
+    owns source_file;
+
+
+# = Storage ===
+sl_id sub attribute, value string;
+# 	**#@	02. 供應商代號: `supplier_id`	long(5)
+# 	**#@	03. 商品編號: `product_id`	long(7)
+storage_count sub attribute, value long;
+actual_storage_count sub attribute, value long;
+specified_arrival_time sub attribute, value datetime;
+actual_arrivial_time sub attribute, value datetime;
+# 	**#@	08. 倉別: `warehouse`	string
+
+storage sub entity,
+    owns sl_id @key,
+    owns supplier_id,
+    owns product_id,
+    owns storage_count,
+    owns actual_storage_count,
+    owns specified_arrival_time,
+    owns actual_arrivial_time,
+    owns warehouse;
+
+
+# === Relationships ===
+## define
+order sub entity,
+    plays order_contains_product:order,
+    plays order_is_canceled_by_cancel:order,
+    plays order_is_returned_by_return:order,
+    plays order_is_shipped_by_shipment:order;
+
+product sub entity,
+    plays order_contains_product:product,
+    plays product_is_supplied_by_supplier:product,
+    plays storage_stores_product:product;
+
+cancel sub entity, plays order_is_canceled_by_cancel:cancel;
+return sub entity, plays order_is_returned_by_return:return;
+shipment sub entity, plays order_is_shipped_by_shipment:shipment;
+supplier sub entity, plays product_is_supplied_by_supplier:supplier;
+storage sub entity, plays storage_stores_product:storage;
+
+order_contains_product sub relation, relates order, relates product;
+order_is_canceled_by_cancel sub relation, relates order, relates cancel;
+order_is_returned_by_return sub relation, relates order, relates return;
+order_is_shipped_by_shipment sub relation, relates order, relates shipment;
+product_is_supplied_by_supplier sub relation, relates product, relates supplier;
+storage_stores_product sub relation, relates storage, relates product;
+
+# = Rules =
+rule rule_order_contains_product:
+    when {
+        $order isa order, has product_id $order__product_id; $product isa product, has product_id $product__product_id;
+        $order__product_id = $product__product_id;
+    } then {
+        (order: $order, product: $product) isa order_contains_product;
+    };
+
+rule rule_order_is_canceled_by_cancel:
+    when {
+        $order isa order, has rg_id $order__rg_id; $cancel isa cancel, has rg_id $cancel__rg_id;
+        $order__rg_id = $cancel__rg_id;
+    } then {
+        (order: $order, cancel: $cancel) isa order_is_canceled_by_cancel;
+    };
+
+rule rule_order_is_returned_by_return:
+    when {
+        $order isa order, has rs_id $order__rs_id; $return isa return, has rs_id $return__rs_id;
+        $order__rs_id = $return__rs_id;
+    } then {
+        (order: $order, return: $return) isa order_is_returned_by_return;
+    };
+
+rule rule_order_is_shipped_by_shipment:
+    when {
+        $order isa order, has rm_id $order__rm_id; $shipment isa shipment, has rm_id $shipment__rm_id;
+        $order__rm_id = $shipment__rm_id;
+    } then {
+        (order: $order, shipment: $shipment) isa order_is_shipped_by_shipment;
+    };
+
+rule rule_product_is_supplied_by_supplier:
+    when {
+        $product isa product, has supplier_id $product__supplier_id; $supplier isa supplier, has supplier_id $supplier__supplier_id;
+        $product__supplier_id = $supplier__supplier_id;
+    } then {
+        (product: $product, supplier: $supplier) isa product_is_supplied_by_supplier;
+    };
+
+rule rule_storage_stores_product:
+    when {
+        $storage isa storage, has product_id $storage__product_id; $product isa product, has product_id $product__product_id;
+        $storage__product_id = $product__product_id;
+    } then {
+        (storage: $storage, product: $product) isa storage_stores_product;
+    };
