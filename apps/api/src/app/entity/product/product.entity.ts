@@ -1,3 +1,4 @@
+import { ApiHideProperty } from '@nestjs/swagger';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { ProductDto } from '#libs/dto/entity';
 
@@ -51,13 +52,16 @@ export class ProductEntity implements ProductDto {
   source_file: string; // CHARACTER VARYING(12) NOT NULL
 
   // relationships
+  @ApiHideProperty()
   @OneToMany(() => OrderEntity, order => order.product)
   orders?: Array<OrderEntity> | undefined;
 
+  @ApiHideProperty()
   @ManyToOne(() => SupplierEntity, supplier => supplier.products)
   @JoinColumn({ name: 'supplier_id', referencedColumnName: 'supplier_id' })
   supplier?: SupplierEntity;
 
+  @ApiHideProperty()
   @OneToMany(() => StorageEntity, storage => storage.product)
   storages?: Array<StorageEntity> | undefined;
 }

@@ -1,3 +1,4 @@
+import { ApiHideProperty } from '@nestjs/swagger';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { ShipmentDto } from '#libs/dto/entity';
 
@@ -34,6 +35,7 @@ export class ShipmentEntity implements ShipmentDto {
   source_file: string; // CHARACTER VARYING(17) NOT NULL
 
   // relationships
+  @ApiHideProperty()
   @OneToMany(() => OrderEntity, order => order.shipment)
   orders?: Array<OrderEntity> | undefined;
 }

@@ -1,10 +1,12 @@
 import { Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../../constant';
 import { ReturnEntity } from './return.entity';
 import { ReturnService } from './return.service';
 
 
+@ApiTags('return')
 @Controller('return')
 export class ReturnController {
   constructor(private readonly returnService: ReturnService) {

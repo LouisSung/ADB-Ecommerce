@@ -1,10 +1,12 @@
 import { Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../../constant';
 import { StorageEntity } from './storage.entity';
 import { StorageService } from './storage.service';
 
 
+@ApiTags('storage')
 @Controller('storage')
 export class StorageController {
   constructor(private readonly storageService: StorageService) {

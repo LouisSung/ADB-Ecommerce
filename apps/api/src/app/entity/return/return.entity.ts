@@ -1,3 +1,4 @@
+import { ApiHideProperty } from '@nestjs/swagger';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { ReturnDto } from '#libs/dto/entity';
 
@@ -28,6 +29,7 @@ export class ReturnEntity implements ReturnDto {
   return_reason: string; // CHARACTER VARYING(15) NOT NULL
 
   // relationships
+  @ApiHideProperty()
   @OneToMany(() => OrderEntity, order => order.return)
   orders?: Array<OrderEntity> | undefined;
 }

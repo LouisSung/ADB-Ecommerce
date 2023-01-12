@@ -1,3 +1,4 @@
+import { ApiHideProperty } from '@nestjs/swagger';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { CancelDto } from '#libs/dto/entity';
 
@@ -19,6 +20,7 @@ export class CancelEntity implements CancelDto {
   cancel_reason: string; // CHARACTER VARYING(15) NOT NULL
 
   // relationships
+  @ApiHideProperty()
   @OneToMany(() => OrderEntity, order => order.cancel)
   orders?: Array<OrderEntity> | undefined;
 }

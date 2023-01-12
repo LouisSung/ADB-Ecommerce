@@ -1,3 +1,4 @@
+import { ApiHideProperty } from '@nestjs/swagger';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { SupplierDto } from '#libs/dto/entity';
 
@@ -25,6 +26,7 @@ export class SupplierEntity implements SupplierDto {
   supplier_address: string; // CHARACTER VARYING(54) NOT NULL
 
   // relationships
+  @ApiHideProperty()
   @OneToMany(() => ProductEntity, product => product.supplier)
   products?: Array<ProductEntity> | undefined;
 }

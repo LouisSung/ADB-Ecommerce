@@ -1,10 +1,11 @@
 import { Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../../constant';
 import { SupplierEntity } from './supplier.entity';
 import { SupplierService } from './supplier.service';
 
-
+@ApiTags('supplier')
 @Controller('supplier')
 export class SupplierController {
   constructor(private readonly supplierService: SupplierService) {

@@ -1,10 +1,12 @@
 import { Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../../constant';
 import { ShipmentEntity } from './shipment.entity';
 import { ShipmentService } from './shipment.service';
 
 
+@ApiTags('shipment')
 @Controller('shipment')
 export class ShipmentController {
   constructor(private readonly shipmentService: ShipmentService) {

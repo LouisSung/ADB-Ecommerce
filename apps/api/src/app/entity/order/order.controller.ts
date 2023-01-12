@@ -1,10 +1,12 @@
 import { Controller, DefaultValuePipe, Get, NotFoundException, Param, ParseIntPipe, Query } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../../constant';
 import { OrderEntity } from './order.entity';
 import { OrderService } from './order.service';
 
 
+@ApiTags('order')
 @Controller('order')
 export class OrderController {
   constructor(private readonly orderService: OrderService) {
