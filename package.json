@@ -1,6 +1,6 @@
 {
   "name": "ecommerce",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "scripts": {
     "ng": "nx",
@@ -19,6 +19,7 @@
     "@nestjs/common": "~9.2.1",
     "@nestjs/core": "~9.2.1",
     "@nestjs/platform-express": "~9.2.1",
+    "@nestjs/serve-static": "~3.0.0",
     "@nrwl/angular": "15.4.5",
     "reflect-metadata": "~0.1.13",
     "rxjs": "~7.5.7",
