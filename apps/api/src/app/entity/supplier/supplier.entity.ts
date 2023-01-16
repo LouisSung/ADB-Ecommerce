@@ -1,12 +1,15 @@
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Node, NodeKey } from '@nhogs/nestjs-neo4j';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { SupplierDto } from '#libs/dto/entity';
 
 import { ProductEntity } from '../product/product.entity';
 
 
+@Node({ label: 'Supplier' })
 @Entity({ name: 'supplier', synchronize: false })
 export class SupplierEntity implements SupplierDto {
+  @NodeKey()
   @PrimaryColumn({ type: 'integer', nullable: false })
   supplier_id: number; // "ADB Final Project".Supplier_Id NOT NULL
 

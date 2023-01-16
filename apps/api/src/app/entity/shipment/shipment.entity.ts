@@ -1,15 +1,18 @@
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Node, NodeKey } from '@nhogs/nestjs-neo4j';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { ShipmentDto } from '#libs/dto/entity';
 
 import { OrderEntity } from '../order/order.entity';
 
 
+@Node({ label: 'Shipment' })
 @Entity({ name: 'shipment', synchronize: false })
 export class ShipmentEntity implements ShipmentDto {
   @Column({ type: 'integer', nullable: false })
   rg_id: number; // "ADB Final Project".Rg_Id NOT NULL
 
+  @NodeKey()
   @PrimaryColumn({ type: 'character', nullable: false })
   rm_id: string; // CHARACTER(15) NOT NULL
 

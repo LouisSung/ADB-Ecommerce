@@ -1,12 +1,15 @@
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Node, NodeKey } from '@nhogs/nestjs-neo4j';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { StorageDto } from '#libs/dto/entity';
 
 import { ProductEntity } from '../product/product.entity';
 
 
+@Node({ label: 'Storage' })
 @Entity({ name: 'storage', synchronize: false })
 export class StorageEntity implements StorageDto {
+  @NodeKey()
   @PrimaryColumn({ type: 'character varying', nullable: false })
   sl_id: string; // CHARACTER VARYING(15) NOT NULL
 

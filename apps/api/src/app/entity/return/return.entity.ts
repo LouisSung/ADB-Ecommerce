@@ -1,10 +1,12 @@
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Node, NodeKey } from '@nhogs/nestjs-neo4j';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { ReturnDto } from '#libs/dto/entity';
 
 import { OrderEntity } from '../order/order.entity';
 
 
+@Node({ label: 'Return' })
 @Entity({ name: 'return', synchronize: false })
 export class ReturnEntity implements ReturnDto {
   @Column({ type: 'integer', nullable: false })
@@ -16,6 +18,7 @@ export class ReturnEntity implements ReturnDto {
   @Column({ type: 'character', nullable: true })
   rs_id: string | null; // CHARACTER(15)
 
+  @NodeKey()
   @PrimaryColumn({ type: 'character varying', nullable: false })
   return_id: string; // CHARACTER VARYING(13) NOT NULL
 

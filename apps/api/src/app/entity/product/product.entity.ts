@@ -1,4 +1,5 @@
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Node, NodeKey } from '@nhogs/nestjs-neo4j';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryColumn } from 'typeorm';
 import { ProductDto } from '#libs/dto/entity';
 
@@ -7,11 +8,13 @@ import { SupplierEntity } from '../supplier/supplier.entity';
 import { StorageEntity } from '../storage/storage.entity';
 
 
+@Node({ label: 'Product' })
 @Entity({ name: 'product', synchronize: false })
 export class ProductEntity implements ProductDto {
   @Column({ type: 'integer', nullable: false })
   supplier_id: number; // "ADB Final Project".Supplier_Id NOT NULL
 
+  @NodeKey()
   @PrimaryColumn({ type: 'integer', nullable: false })
   product_id: number; // "ADB Final Project".Product_Id NOT NULL
 

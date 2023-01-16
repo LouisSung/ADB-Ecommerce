@@ -1,12 +1,15 @@
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Node, NodeKey } from '@nhogs/nestjs-neo4j';
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm';
 import { CancelDto } from '#libs/dto/entity';
 
 import { OrderEntity } from '../order/order.entity';
 
 
+@Node({ label: 'Cancel' })
 @Entity({ name: 'cancel', synchronize: false })
 export class CancelEntity implements CancelDto {
+  @NodeKey()
   @PrimaryColumn({ type: 'integer', nullable: false })
   rg_id: number; // "ADB Final Project".Rg_Id NOT NULL
 

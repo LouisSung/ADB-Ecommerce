@@ -1,4 +1,5 @@
 import { ApiHideProperty } from '@nestjs/swagger';
+import { Node, NodeKey } from '@nhogs/nestjs-neo4j';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { OrderDto } from '#libs/dto/entity';
 
@@ -8,6 +9,7 @@ import { CancelEntity } from '../cancel/cancel.entity';
 import { ShipmentEntity } from '../shipment/shipment.entity';
 
 
+@Node({ label: 'Order' })
 @Entity({ name: 'order', synchronize: false })
 export class OrderEntity implements OrderDto {
   @Column({ type: 'character varying', nullable: false })
@@ -34,6 +36,7 @@ export class OrderEntity implements OrderDto {
   @Column({ type: 'character', nullable: false })
   rm_id: string; // CHARACTER(15) NOT NULL
 
+  @NodeKey()
   @PrimaryColumn({ type: 'character', nullable: false })
   rs_id: string; // CHARACTER(15) NOT NULL
 
