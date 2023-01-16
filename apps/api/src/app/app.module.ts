@@ -9,6 +9,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { entities } from './typeorm';
 
+import { GraphModule } from './graph/graph.module';
 import { CancelModule } from './entity/cancel/cancel.module';
 import { OrderModule } from './entity/order/order.module';
 import { ProductModule } from './entity/product/product.module';
@@ -49,6 +50,7 @@ import { SupplierModule } from './entity/supplier/supplier.module';
       }),
       inject: [ConfigService],
     }),
+    GraphModule,
     CancelModule,
     OrderModule,
     ProductModule,
