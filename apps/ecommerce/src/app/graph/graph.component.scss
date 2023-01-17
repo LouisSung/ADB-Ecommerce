@@ -11,3 +11,25 @@
   height: 100%;
   width: 100%;
 }
+
+.floatingPanel {
+  display: flex;
+  flex-direction: column;
+
+  .controlButtons {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .queryConfig {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  nz-checkbox-group {
+    display: flex;
+    justify-content: space-evenly;
+  }
+}

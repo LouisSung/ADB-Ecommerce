@@ -1,1 +1,33 @@
-<div id="neovis" #neovis>loading</div>
+<div #neovis (click)="selectedNode = undefined" id="neovis">loading</div>
+<ecommerce-floating-panel>
+  <div class="floatingPanel" floatingPanel>
+    <div class="controlButtons">
+      <button (click)="render()" nz-button nzDanger nzType="primary"><span nz-icon nzType="retweet"></span>Fetch</button>
+      <nz-segmented [(ngModel)]="segmentedOption" [nzOptions]="segmentedOptions" nzSize="large"></nz-segmented>
+    </div>
+
+    <nz-divider [style.margin]="'10px 0'"></nz-divider>
+
+    <ng-container *ngIf="segmentedOption === 0">
+      <div class="queryConfig">
+        <nz-input-group [style.max-width]="'130px'" nzPrefix="Keyword: ">
+          <input [(ngModel)]="keyword" nz-input placeholder="Enter keyword for query" type="text" />
+        </nz-input-group>
+        <nz-input-number-group [style.min-width]="'100px'" nzPrefix="Limit: ">
+          <nz-input-number [(ngModel)]="limit" [nzMax]="9999" [nzMin]="1" [nzStep]="100" nzSize="large"></nz-input-number>
+        </nz-input-number-group>
+        <button (click)="undefined" nz-button nzType="primary"><span nz-icon nzType="search"></span>Inspect</button>
+      </div>
+    </ng-container>
+
+    <ng-container *ngIf="segmentedOption === 1">
+      <nz-checkbox-group (ngModelChange)="onLabelOptionsChange(labelOptionsG1)" [(ngModel)]="labelOptionsG1"></nz-checkbox-group>
+      <nz-checkbox-group (ngModelChange)="onLabelOptionsChange(labelOptionsG2)" [(ngModel)]="labelOptionsG2"></nz-checkbox-group>
+    </ng-container>
+
+    <ng-container *ngIf="segmentedOption === 2">
+      <nz-checkbox-group (ngModelChange)="onNodeOptionsChange(nodeOptionsG1, labelOptionsG1)" [(ngModel)]="nodeOptionsG1"></nz-checkbox-group>
+      <nz-checkbox-group (ngModelChange)="onNodeOptionsChange(nodeOptionsG2, labelOptionsG2)" [(ngModel)]="nodeOptionsG2"></nz-checkbox-group>
+    </ng-container>
+  </div>
+</ecommerce-floating-panel>

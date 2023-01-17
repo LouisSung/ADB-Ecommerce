@@ -1,5 +1,7 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { Node, NeoVis, NeoVisEvents } from 'neovis.js/dist/neovis'; // with dependencies
+import { NeoVis, NeoVisEvents, Node } from 'neovis.js/dist/neovis'; // with dependencies
+import { NzCheckBoxOptionInterface } from 'ng-zorro-antd/checkbox';
+import { NzSegmentedOptions } from 'ng-zorro-antd/segmented';
 import { lastValueFrom } from 'rxjs';
 
 import { GraphService } from './graph.service';
@@ -73,6 +75,24 @@ export class GraphComponent implements AfterViewInit {
     this.render().catch((err) => console.error(err));
   }
 
+  onLabelOptionsChange(labelCheckOptions: Array<NzCheckBoxOptionInterface>) {
+    for (const { value, checked, disabled } of labelCheckOptions) {
+      if (!disabled) {
+        this.nodeLabelFlag[value as NodeLabel] = checked ? 'show' : 'hide';
+      }
+    }
+  }
+
+  onNodeOptionsChange(nodeCheckOptions: Array<NzCheckBoxOptionInterface>, labelCheckOptions: Array<NzCheckBoxOptionInterface>) {
+    for (const { value, checked } of nodeCheckOptions) {
+      this.nodeLabelFlag[value as NodeLabel] = checked ? 'show' : '';
+      const labelCheckOption = labelCheckOptions.find((label) => label.value === value);
+      if (labelCheckOption) {
+        labelCheckOption.disabled = !checked;
+      }
+    }
+  }
+
   private onClickNode = ({ node }: { node: Node }) => {
     console.log(node);
     setTimeout(() => this.selectedNode = node, 0); // save selectedNode after clear on click
@@ -89,7 +109,8 @@ export class GraphComponent implements AfterViewInit {
     const labels = { ...NeovisService.labels };
     for (const [nodeLabel, flag] of Object.entries(this.nodeLabelFlag)) {
       if (flag === 'hide') {
-        delete labels[nodeLabel as NodeLabel].label;
+        labels[nodeLabel as NodeLabel] = { ...labels[nodeLabel as NodeLabel] }; // make a copy
+        delete labels[nodeLabel as NodeLabel].label; // delete the one in copy
       }
     }
 
