@@ -1,4 +1,6 @@
-import { Controller, DefaultValuePipe, Get, Param, ParseIntPipe, Query } from '@nestjs/common';
+import {
+  Controller, DefaultValuePipe, ForbiddenException, Get, NotFoundException, Param, ParseIntPipe, Query
+} from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 
 import { DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE } from '../constant';
@@ -10,6 +12,16 @@ import { ConfigService } from '@nestjs/config';
 export class GraphController {
   constructor(private readonly configService: ConfigService) {
   }
+
+  private readonly primaryKeyLookupTable = {
+    cancel: 'rg_id',
+    order: 'rs_id',
+    product: 'product_id',
+    'return': 'return_id',
+    shipment: 'rm_id',
+    storage: 'sl_id',
+    supplier: 'supplier_id'
+  };
 
   @Get('auth')
   getNeo4jAuth() {
@@ -60,4 +72,34 @@ export class GraphController {
     cypher += limit ? `LIMIT ${ limit }\n` : '';
     return { cypher: cypher };
   }
+
+  // FIXME: need refactor
+  @Get('inspection/:label')
+  genInspectionQuery(@Param('label') label: NodeLabel, @Query() query: Record<string, string>) {
+    const lowerLabel = label.toLowerCase();
+    const primaryKey = this.primaryKeyLookupTable[lowerLabel];
+    let primaryKeyValue = query[primaryKey];
+    if (primaryKey === undefined) {
+      return new ForbiddenException(`'${ label }' is invalid node label`);
+    } else if (primaryKeyValue === undefined) {
+      return new NotFoundException(`Primary key '${ primaryKey }' not provided in query params`);
+    }
+    const upperLabel = `${ lowerLabel.charAt(0).toUpperCase() }${ lowerLabel.slice(1) }`;
+    primaryKeyValue = isNaN(primaryKeyValue as unknown as number) ? `'${ primaryKeyValue }'` : primaryKeyValue;
+    const limit = parseInt(query['limit']) || '';
+    let cypher = `MATCH (${ lowerLabel }:${ upperLabel })\nWHERE ${ lowerLabel }.${ primaryKey } = ${ primaryKeyValue }\n`;
+    cypher += /supplier/u.test(lowerLabel) ? 'OPTIONAL MATCH (product: Product)-[r1:IS_SUPPLIED_BY]->(supplier: Supplier)\n' : '';
+    cypher += /(order|product)/u.test(lowerLabel) ? 'OPTIONAL MATCH (order: Order)-[r2:CONTAINS]->(product: Product)\n' : '';
+    cypher += /(order|cancel)/u.test(lowerLabel) ? 'OPTIONAL MATCH (order: Order)-[r3:IS_CANCELED_BY]->(cancel: Cancel)\n' : '';
+    cypher += /(order|return)/u.test(lowerLabel) ? 'OPTIONAL MATCH (order: Order)-[r4:IS_RETURNED_BY]->(return: Return)\n' : '';
+    cypher += /(order|shipment)/u.test(lowerLabel) ? 'OPTIONAL MATCH (order: Order)-[r5:IS_SHIPPED_BY]->(shipment: Shipment)\n' : '';
+    cypher += /(storage|product)/u.test(lowerLabel) ? 'OPTIONAL MATCH (storage: Storage)-[r6:STORES]->(product: Product)\n' : '';
+    cypher += `RETURN *\n`;
+    cypher += limit ? `LIMIT ${ limit }\n` : '';
+    return { cypher };
+  }
 }
+
+
+// interface
+type NodeLabel = 'Cancel' | 'Order' | 'Product' | 'Return' | 'Shipment' | 'Storage' | 'Supplier' | 'Keyword';
