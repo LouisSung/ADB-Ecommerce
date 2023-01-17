@@ -121,4 +121,27 @@ export class GraphComponent implements AfterViewInit {
     this.neovis.registerOnEvent(<NeoVisEvents>'clickNode', this.onClickNode);
     this.neovis.registerOnEvent(<NeoVisEvents>'completed', this.onFetchCompleted);
   }
+
+  // FIXME: should refactor
+  async inspect() {
+    if (this.selectedNode) {
+      const labels = { ...NeovisService.labels };
+      for (const [nodeLabel, flag] of Object.entries(this.nodeLabelFlag)) {
+        if (flag === 'hide') {
+          labels[nodeLabel as NodeLabel] = { ...labels[nodeLabel as NodeLabel] }; // make a copy
+          delete labels[nodeLabel as NodeLabel].label; // delete the one in copy
+        }
+      }
+
+      const { raw: { labels: nodeLabels, properties } } = this.selectedNode;
+      Object.assign(properties, { limit: this.limit });
+      console.log(properties);
+      this.cypher = (await lastValueFrom(this.graphService.genInspectionQuery(nodeLabels[0] as NodeLabel, properties))).cypher;
+      const { cypher: initialCypher, neovisRef: { nativeElement: { id: containerId } } } = this;
+      this.neovis = this.novisService.genNeovisInstance({ containerId, initialCypher, labels });
+      this.neovis.render();
+      this.neovis.registerOnEvent(<NeoVisEvents>'clickNode', this.onClickNode);
+      this.neovis.registerOnEvent(<NeoVisEvents>'completed', this.onFetchCompleted);
+    }
+  }
 }

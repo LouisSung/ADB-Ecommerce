@@ -16,7 +16,7 @@
         <nz-input-number-group [style.min-width]="'100px'" nzPrefix="Limit: ">
           <nz-input-number [(ngModel)]="limit" [nzMax]="9999" [nzMin]="1" [nzStep]="100" nzSize="large"></nz-input-number>
         </nz-input-number-group>
-        <button (click)="undefined" nz-button nzType="primary"><span nz-icon nzType="search"></span>Inspect</button>
+        <button (click)="inspect()" [disabled]="selectedNode === undefined" nz-button nzType="primary"><span nz-icon nzType="search"></span>Inspect</button>
       </div>
     </ng-container>
 
