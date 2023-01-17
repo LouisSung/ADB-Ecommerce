@@ -19,7 +19,10 @@
           "apps/ecommerce/src/favicon.ico",
           "apps/ecommerce/src/assets"
         ],
-        "styles": ["apps/ecommerce/src/styles.scss"],
+        "styles": [
+          "apps/ecommerce/src/styles.scss",
+          "./node_modules/ng-zorro-antd/ng-zorro-antd.min.css"
+        ],
         "scripts": []
       },
       "configurations": {
