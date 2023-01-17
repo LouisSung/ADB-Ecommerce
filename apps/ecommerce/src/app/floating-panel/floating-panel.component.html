@@ -1,0 +1,4 @@
+<button [(nzPopoverVisible)]="visible" [nzPopoverContent]="popoverTemplate" [nzPopoverTitle]="panelTitle"
+        nz-button nz-popover="" nzPopoverPlacement="leftBottom" nzPopoverTrigger="click"
+        nzShape="circle" nzSize="large" nzType="primary"><span nz-icon nzType="control"></span></button>
+<ng-template #popoverTemplate><ng-content select="[floatingPanel]"></ng-content></ng-template>
