@@ -1,10 +1,13 @@
-<nz-segmented (nzValueChange)="wordCloudOption = $event; renderWordCloud()" [(ngModel)]="wordCloudOption" [nzDisabled]="wordCloudOption < 0" [nzOptions]="wordCloudOptions"></nz-segmented>
+<nz-segmented (nzValueChange)="wordCloudOption = $event; renderWordCloud()" [(ngModel)]="wordCloudOption"
+              [nzDisabled]="wordCloudOption < 0" [nzOptions]="wordCloudOptions"></nz-segmented>
 <canvas #wordCloudCanvas></canvas>
 
 <ecommerce-floating-panel>
   <div class="floatingPanel" floatingPanel>
     <div class="controlButtons">
-      <button (click)="renderProductWordCloudWithDateRange()" nz-button nzDanger nzType="primary"><span nz-icon nzType="retweet"></span>Fetch</button>
+      <button (click)="renderProductWordCloudWithDateRange()" nz-button nzDanger nzType="primary"><span nz-icon
+                                                                                                        nzType="retweet"></span>Fetch
+      </button>
     </div>
 
     <nz-divider [style.margin]="'10px 0'"></nz-divider>
@@ -19,8 +22,14 @@
         <nz-option nzLabel="Month" nzValue="month"></nz-option>
         <nz-option nzLabel="Year" nzValue="year"></nz-option>
       </nz-select>
-      <nz-range-picker (ngModelChange)="onDatePick($event)" [(ngModel)]="dateRange" [nzDefaultPickerValue]="presetDateRanges.Q1_2011[0]"
+      <nz-range-picker (ngModelChange)="onDatePick($event)" [(ngModel)]="dateRange"
+                       [nzDefaultPickerValue]="presetDateRanges.Q1_2011[0]"
                        [nzMode]="dateMode" [nzRanges]="presetDateRanges"></nz-range-picker>
     </nz-space>
   </div>
 </ecommerce-floating-panel>
+
+<ng-template #notification let-notification="data">
+  {{ notification.msg }}
+  <button nz-button nzSize="small" nzDanger [routerLink]="'/graph'" [queryParams]="{ keyword: notification.keyword }">Go To Graph</button>
+</ng-template>

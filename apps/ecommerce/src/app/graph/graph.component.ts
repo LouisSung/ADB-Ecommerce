@@ -1,8 +1,9 @@
 import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { NeoVis, NeoVisEvents, Node } from 'neovis.js/dist/neovis'; // with dependencies
 import { NzCheckBoxOptionInterface } from 'ng-zorro-antd/checkbox';
 import { NzSegmentedOptions } from 'ng-zorro-antd/segmented';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 import { GraphService } from './graph.service';
 import { NeovisService, NodeLabel } from '../neovis/neovis.service';
@@ -14,7 +15,7 @@ import { NeovisService, NodeLabel } from '../neovis/neovis.service';
   styleUrls: ['./graph.component.scss'],
 })
 export class GraphComponent implements AfterViewInit {
-  constructor(private readonly graphService: GraphService, private readonly novisService: NeovisService) {
+  constructor(private route: ActivatedRoute, private readonly graphService: GraphService, private readonly novisService: NeovisService) {
   }
 
   protected segmentedOption = 0;
@@ -71,7 +72,10 @@ export class GraphComponent implements AfterViewInit {
 
   private neovis: NeoVis;
 
-  ngAfterViewInit() {
+  async ngAfterViewInit() {
+    const { keyword } = await firstValueFrom(this.route.queryParams);
+    this.keyword = keyword ?? this.keyword;
+    console.log(this.keyword);
     this.render().catch((err) => console.error(err));
   }
 

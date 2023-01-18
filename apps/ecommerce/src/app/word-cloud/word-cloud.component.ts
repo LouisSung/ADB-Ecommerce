@@ -1,7 +1,8 @@
-import { AfterViewInit, Component, ElementRef, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, TemplateRef, ViewChild } from '@angular/core';
 import { ActiveElement, Chart, ChartData, ChartEvent, ChartTypeRegistry, LinearScale } from 'chart.js';
 import { WordCloudChart } from 'chartjs-chart-wordcloud';
 import { NzDateMode } from 'ng-zorro-antd/date-picker';
+import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { lastValueFrom } from 'rxjs';
 import { KeywordDto } from '#libs/dto/entity/keyword.dto';
 
@@ -16,6 +17,9 @@ import { WordCloudService } from './word-cloud.service';
 })
 export class WordCloudComponent implements AfterViewInit {
   @ViewChild('wordCloudCanvas') private wordCloudCanvas?: ElementRef<HTMLCanvasElement>;
+
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  @ViewChild('notification', { static: false }) notificationTemplate?: TemplateRef<{}>;
 
   readonly wordCloudOptions = ['By Order', 'By Product'];
 
@@ -40,7 +44,7 @@ export class WordCloudComponent implements AfterViewInit {
 
   private keywordRawData: KeywordRawData = { byOrder: [], byProduct: [], byOrderDate: [] };
 
-  constructor(private readonly wordCloudService: WordCloudService) {
+  constructor(private readonly wordCloudService: WordCloudService, private notificationService: NzNotificationService) {
     Chart.register(LinearScale);
   }
 
@@ -105,8 +109,10 @@ export class WordCloudComponent implements AfterViewInit {
   private onWordClick: WordEventCallback = (event, elements): void => {
     const wordActiveElement = elements[0]?.element as unknown as WordActiveElement;
     if (wordActiveElement) {
-      const { text, $context: { raw: value }, index: rank } = wordActiveElement;
-      console.warn(`clicked word '${ text }' (occurrence: ${ value }, rank: ${ rank + 1 })`);
+      const { text: keyword, index: rank } = wordActiveElement;
+      const msg = `Keyword: '${ keyword }', Rank: ${ rank + 1 }`;
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      this.notificationService.template(this.notificationTemplate!, { nzData: { msg, keyword } });
     }
   }
 
