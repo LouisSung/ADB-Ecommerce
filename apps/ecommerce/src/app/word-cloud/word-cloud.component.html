@@ -1,2 +1,26 @@
-<nz-segmented (nzValueChange)="wordCloudOption = $event; renderWordCloud()" [nzOptions]="wordCloudOptions"></nz-segmented>
+<nz-segmented (nzValueChange)="wordCloudOption = $event; renderWordCloud()" [(ngModel)]="wordCloudOption" [nzDisabled]="wordCloudOption < 0" [nzOptions]="wordCloudOptions"></nz-segmented>
 <canvas #wordCloudCanvas></canvas>
+
+<ecommerce-floating-panel>
+  <div class="floatingPanel" floatingPanel>
+    <div class="controlButtons">
+      <button (click)="renderProductWordCloudWithDateRange()" nz-button nzDanger nzType="primary"><span nz-icon nzType="retweet"></span>Fetch</button>
+    </div>
+
+    <nz-divider [style.margin]="'10px 0'"></nz-divider>
+
+    <nz-space>
+      <nz-input-number-group [style.min-width]="'100px'" nzPrefix="Top: ">
+        <nz-input-number [(ngModel)]="limit" [nzMax]="1000" [nzMin]="1" [nzStep]="100" nzSize="large"></nz-input-number>
+      </nz-input-number-group>
+      <nz-select *nzSpaceItem [(ngModel)]="dateMode">
+        <nz-option nzLabel="Date" nzValue="date"></nz-option>
+        <nz-option nzLabel="Week" nzValue="week"></nz-option>
+        <nz-option nzLabel="Month" nzValue="month"></nz-option>
+        <nz-option nzLabel="Year" nzValue="year"></nz-option>
+      </nz-select>
+      <nz-range-picker (ngModelChange)="onDatePick($event)" [(ngModel)]="dateRange" [nzDefaultPickerValue]="presetDateRanges.Q1_2011[0]"
+                       [nzMode]="dateMode" [nzRanges]="presetDateRanges"></nz-range-picker>
+    </nz-space>
+  </div>
+</ecommerce-floating-panel>

@@ -14,4 +14,8 @@ export class WordCloudService {
   getKeywordRawData(params?: { limit?: number, order_by: keyof KeywordDto }): Observable<Pagination<KeywordDto>> {
     return this.http.get<Pagination<KeywordDto>>(`api/keyword`, { params });
   }
+
+  getKeywordProductDataWithDateRange(params: { limit?: number, start_date: string, end_date: string }): Observable<Pagination<KeywordDto>> {
+    return this.http.get<Pagination<KeywordDto>>(`api/keyword/range`, { params });
+  }
 }
