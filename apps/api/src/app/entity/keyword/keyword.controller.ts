@@ -22,4 +22,14 @@ export class KeywordController {
     limit = Math.max(1, Math.min(limit, MAX_PAGE_SIZE));
     return await this.keywordService.paginateKeywords({ page, limit, order_by });
   }
+
+  @Get('range')
+  async getKeywordsWithDateRange(
+    @Query('limit', new DefaultValuePipe(DEFAULT_PAGE_SIZE), ParseIntPipe) limit = DEFAULT_PAGE_SIZE,
+    @Query('start_date') start_date: string,
+    @Query('end_date') end_date: string
+  ) {
+    limit = Math.max(1, Math.min(limit, MAX_PAGE_SIZE));
+    return { items: await this.keywordService.getKeywordsWithDateRange({ limit, start_date, end_date}) };
+  }
 }
