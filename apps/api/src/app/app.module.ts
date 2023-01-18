@@ -12,6 +12,7 @@ import { entities } from './typeorm';
 import { GraphModule } from './graph/graph.module';
 import { CancelModule } from './entity/cancel/cancel.module';
 import { OrderModule } from './entity/order/order.module';
+import { KeywordModule } from './entity/keyword/keyword.module';
 import { ProductModule } from './entity/product/product.module';
 import { ReturnModule } from './entity/return/return.module';
 import { ShipmentModule } from './entity/shipment/shipment.module';
@@ -53,6 +54,7 @@ import { SupplierModule } from './entity/supplier/supplier.module';
     GraphModule,
     CancelModule,
     OrderModule,
+    KeywordModule,
     ProductModule,
     ReturnModule,
     ShipmentModule,
